@@ -32,6 +32,11 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
     });
     exe.root_module.addImport("pg", pg.module("pg"));
+    const dotenv = b.dependency("dotenv", .{
+        .target = target,
+        .optimize = optimize,
+    });
+    exe.root_module.addImport("dotenv", dotenv.module("dotenv"));
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
