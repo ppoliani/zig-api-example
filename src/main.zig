@@ -6,6 +6,7 @@ pub fn main() !void {
     const engine = try zinc.init(.{ .port = 8080 });
     defer engine.deinit();
     const router = engine.getRouter();
+    defer store.deinit();
 
     try user_route.register(try router.group("/users"));
     try router.get("/", home);

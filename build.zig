@@ -21,23 +21,19 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
     });
-    const zinc = b.dependency("zinc", .{
+    exe.root_module.addImport("zinc", b.dependency("zinc", .{
         .target = target,
         .optimize = optimize,
-    });
-    exe.root_module.addImport("zinc", zinc.module("zinc"));
+    }).module("zinc"));
 
-    const pg = b.dependency("pg", .{
+    exe.root_module.addImport("pg", b.dependency("pg", .{
         .target = target,
         .optimize = optimize,
-    });
-    exe.root_module.addImport("pg", pg.module("pg"));
-    const dotenv = b.dependency("dotenv", .{
+    }).module("pg"));
+    exe.root_module.addImport("dotenv", b.dependency("dotenv", .{
         .target = target,
         .optimize = optimize,
-    });
-    exe.root_module.addImport("dotenv", dotenv.module("dotenv"));
-
+    }).module("dotenv"));
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).

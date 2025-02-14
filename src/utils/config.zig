@@ -1,6 +1,5 @@
 const std = @import("std");
 const dotenv = @import("dotenv");
-const getEnvVarOwned = std.process.getEnvVarOwned;
 
 pub const Config = struct {
     db_name: []const u8,
@@ -8,20 +7,23 @@ pub const Config = struct {
     db_password: []const u8,
 
     pub fn init() !Config {
-        const gpa = std.heap.GeneralPurposeAllocator(.{}){};
-        const aa = std.heap.ArenaAllocator.init(gpa.allocator());
+        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        var aa = std.heap.ArenaAllocator.init(gpa.allocator());
         defer aa.deinit();
-
         const allocator = aa.allocator();
 
-        if (std.mem.eql(u8, try getEnvVarOwned(allocator, "ENV"), "development")) {
+        var env_map = try std.process.getEnvMap(allocator);
+        defer env_map.deinit();
+
+        const env_value = env_map.get("ENV").?;
+        if (std.mem.eql(u8, env_value, "development")) {
             try dotenv.load(allocator, .{});
         }
 
         return Config{
-            .db_name = try getEnvVarOwned(allocator, "DB_NAME"),
-            .db_username = try getEnvVarOwned(allocator, "DB_USERNAME"),
-            .db_password = try getEnvVarOwned(allocator, "DB_PASSWORD"),
+            .db_name = env_map(allocator, "DB_NAME").?,
+            .db_username = env_map(allocator, "DB_USERNAME").?,
+            .db_password = env_map(allocator, "DB_PASSWORD").?,
         };
     }
 };

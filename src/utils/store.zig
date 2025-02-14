@@ -1,14 +1,18 @@
 const Config = @import("./config.zig").Config;
-const DbConnection = @import("../storage/connection.zig").DbConnection;
+const DbPool = @import("../storage/connection.zig").DbPool;
 
 pub const Store = struct {
     config: Config,
-    db: DbConnection,
+    db: DbPool,
 
     pub fn init() !Store {
         const config = try Config.init();
-        const db = try DbConnection.init(config.db_name, config.db_username, config.db_passowrd);
+        const db = try DbPool.init(config.db_name, config.db_username, config.db_passowrd);
         return Store{ .config = config, .db = db };
+    }
+
+    pub fn deinit(self: Store) void {
+        self.db.deinit();
     }
 };
 
