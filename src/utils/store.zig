@@ -15,5 +15,3 @@ pub const Store = struct {
         self.db.deinit();
     }
 };
-
-pub const store = Store.init() catch unreachable;
