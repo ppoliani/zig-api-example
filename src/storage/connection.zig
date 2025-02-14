@@ -2,10 +2,10 @@ const std = @import("std");
 const pg = @import("pg");
 const Pool = pg.Pool;
 
-const Connection = struct {
+pub const DbConnection = struct {
     pool: Pool,
 
-    pub fn init(database: []const u8, username: []const u8, password: []const u8) !Connection {
+    pub fn init(database: []const u8, username: []const u8, password: []const u8) !DbConnection {
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
         const pool = try Pool.init(gpa.allocator(), .{ .size = 5, .connect = .{
@@ -18,10 +18,10 @@ const Connection = struct {
             .timeout = 10_000,
         } });
 
-        return Connection{ .pool = pool };
+        return DbConnection{ .pool = pool };
     }
 
-    pub fn deinit(self: Connection) !void {
+    pub fn deinit(self: DbConnection) !void {
         self.pool.deinit();
     }
 };

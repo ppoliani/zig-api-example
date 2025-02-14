@@ -7,7 +7,7 @@ pub const Config = struct {
     db_username: []const u8,
     db_password: []const u8,
 
-    pub fn init() Config {
+    pub fn init() !Config {
         const gpa = std.heap.GeneralPurposeAllocator(.{}){};
         const aa = std.heap.ArenaAllocator.init(gpa.allocator());
         defer aa.deinit();
@@ -25,3 +25,5 @@ pub const Config = struct {
         };
     }
 };
+
+pub const config = Config.init();

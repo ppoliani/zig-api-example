@@ -1,4 +1,5 @@
 const zinc = @import("zinc");
+const store = @import("./utils/store.zig").store;
 const user_route = @import("./endpoints/user/route.zig");
 
 pub fn main() !void {
