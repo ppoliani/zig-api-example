@@ -1,4 +1,5 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const pg = @import("pg");
 const Pool = pg.Pool;
 
@@ -7,8 +8,9 @@ pub const DbPool = struct {
 
     pub fn init(database: []const u8, username: []const u8, password: []const u8) !DbPool {
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        const allocator = if (builtin.mode == .Debug) gpa.allocator() else std.heap.c_allocator;
 
-        const pool = try Pool.init(gpa.allocator(), .{ .size = 5, .connect = .{
+        const pool = try Pool.init(allocator, .{ .size = 10, .connect = .{
             .port = 5432,
             .host = "127.0.0.1",
         }, .auth = .{

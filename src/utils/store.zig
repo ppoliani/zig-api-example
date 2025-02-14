@@ -1,3 +1,4 @@
+const std = @import("std");
 const Config = @import("./config.zig").Config;
 const DbPool = @import("../storage/connection.zig").DbPool;
 

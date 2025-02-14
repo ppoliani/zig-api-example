@@ -9,16 +9,14 @@ pub const Config = struct {
     pub fn init() !Config {
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
         var aa = std.heap.ArenaAllocator.init(gpa.allocator());
-        defer aa.deinit();
         const allocator = aa.allocator();
 
-        var env_map = try std.process.getEnvMap(allocator);
-        defer env_map.deinit();
-
-        const env_value = env_map.get("ENV").?;
+        const env_value = try std.process.getEnvVarOwned(allocator, "ENV");
         if (std.mem.eql(u8, env_value, "development")) {
             try dotenv.load(allocator, .{});
         }
+
+        var env_map = try std.process.getEnvMap(allocator);
 
         return Config{
             .db_name = env_map.get("DB_NAME").?,
