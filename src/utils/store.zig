@@ -7,7 +7,7 @@ pub const Store = struct {
 
     pub fn init() !Store {
         const config = try Config.init();
-        const db = try DbPool.init(config.db_name, config.db_username, config.db_passowrd);
+        const db = try DbPool.init(config.db_name, config.db_username, config.db_password);
         return Store{ .config = config, .db = db };
     }
 

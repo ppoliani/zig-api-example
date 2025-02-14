@@ -21,9 +21,9 @@ pub const Config = struct {
         }
 
         return Config{
-            .db_name = env_map(allocator, "DB_NAME").?,
-            .db_username = env_map(allocator, "DB_USERNAME").?,
-            .db_password = env_map(allocator, "DB_PASSWORD").?,
+            .db_name = env_map.get("DB_NAME").?,
+            .db_username = env_map.get("DB_USERNAME").?,
+            .db_password = env_map.get("DB_PASSWORD").?,
         };
     }
 };

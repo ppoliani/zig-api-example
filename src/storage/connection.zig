@@ -21,7 +21,7 @@ pub const DbPool = struct {
         return DbPool{ .pool = pool };
     }
 
-    pub fn deinit(self: DbPool) !void {
+    pub fn deinit(self: DbPool) void {
         self.pool.deinit();
     }
 };

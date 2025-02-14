@@ -31,8 +31,7 @@
             .path = "../zinc",
         },
         .dotenv = .{
-            .url = "git+https://github.com/dying-will-bullet/dotenv?ref=master#ad7e37c4b05d07a3319376eb17afd6ad491ffb6b",
-            .hash = "12201347c20e8c4cb161f16bba30e51da17c32b89ef887b9b8932d6ed135ee5a6d01",
+            .path = "../dotenv",
         },
     },
     .paths = .{
