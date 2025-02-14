@@ -8,8 +8,7 @@ pub const Config = struct {
 
     pub fn init() !Config {
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-        var aa = std.heap.ArenaAllocator.init(gpa.allocator());
-        const allocator = aa.allocator();
+        const allocator = gpa.allocator();
 
         const env_value = try std.process.getEnvVarOwned(allocator, "ENV");
         if (std.mem.eql(u8, env_value, "development")) {
