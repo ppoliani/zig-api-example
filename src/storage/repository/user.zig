@@ -1,5 +1,35 @@
+const std = @import("std");
+const Pool = @import("pg").Pool;
 const User = @import("../model/user.zig").User;
 
-const UserRepository = struct {};
+pub fn create_user(pool: *Pool, new_user: User) !void {
+    var conn = try pool.acquire();
+    defer conn.release();
 
-pub fn create_user(new_user: User) !void {}
+    const query =
+        \\ INSERT INTO users (name, username, password)
+        \\ VALUES ($1, $2, $3)
+    ;
+
+    try conn.exec(query, .{ new_user.name, new_user.password, new_user.age });
+}
+
+pub fn get_users(pool: *Pool) !void {
+    var conn = try pool.acquire();
+    defer conn.release();
+
+    const query =
+        \\ SELECT * FROM users
+    ;
+
+    const result = try conn.exec(query, .{});
+    defer result.deinit();
+
+    while (try result.next()) |row| {
+        const id = row.get(i32, 0);
+        const name = row.get([]const u8, 0);
+        const email = row.get([]const u8, 0);
+
+        std.debug.print("{any}\n", .{ id, name, email });
+    }
+}
