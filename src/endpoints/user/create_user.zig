@@ -1,9 +1,18 @@
-const std = @import("zinc");
+const std = @import("std");
 const zinc = @import("zinc");
 const User = @import("../../storage/model/user.zig").User;
+const Store = @import("../../utils//store.zig").Store;
+const create_user = @import("../../storage/repository/user.zig").create_user;
 
-pub fn exec(_: *zinc.Context) !void {
-    // const name = ctx.postFormMap("name");
-    // const email = ctx.postFormMap("email");
-    // const age = try std.fmt.parseInt(i16, ctx.postFormMap("age"), 10);
+pub fn exec(ctx: *zinc.Context) !void {
+    const store: *Store = @ptrCast(@alignCast(ctx.data));
+    const user = blk: {
+        if (try ctx.getJson(User)) |user| {
+            break :blk user;
+        }
+
+        return ctx.response.sendStatus(std.http.Status.bad_request);
+    };
+
+    try create_user(&store.db, user);
 }

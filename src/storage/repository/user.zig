@@ -1,9 +1,10 @@
 const std = @import("std");
 const Pool = @import("pg").Pool;
+const DbPool = @import("../connection.zig").DbPool;
 const User = @import("../model/user.zig").User;
 
-pub fn create_user(pool: *Pool, new_user: User) !void {
-    var conn = try pool.acquire();
+pub fn create_user(db_poo: *DbPool, new_user: User) !void {
+    var conn = try db_poo.pool.acquire();
     defer conn.release();
 
     const query =
@@ -12,7 +13,7 @@ pub fn create_user(pool: *Pool, new_user: User) !void {
         \\ ON CONFLICT (name, email, age) DO NOTHING
     ;
 
-    try conn.exec(query, .{ new_user.name, new_user.password, new_user.age });
+    _ = try conn.exec(query, .{ new_user.name, new_user.email, new_user.age });
 }
 
 pub fn get_users(pool: *Pool) !void {
