@@ -7,8 +7,9 @@ pub fn create_user(pool: *Pool, new_user: User) !void {
     defer conn.release();
 
     const query =
-        \\ INSERT INTO users (name, username, password)
+        \\ INSERT INTO users (name, email, age)
         \\ VALUES ($1, $2, $3)
+        \\ ON CONFLICT (name, email, age) DO NOTHING
     ;
 
     try conn.exec(query, .{ new_user.name, new_user.password, new_user.age });
