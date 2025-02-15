@@ -6,7 +6,7 @@ pub fn main() !void {
     var store = try Store.init();
     defer store.deinit();
     var config = zinc.Config.Engine{ .port = 8080 };
-    config.setData(&store);
+    config.appData(&store);
     const engine = try zinc.init(config);
     defer engine.deinit();
     const router = engine.getRouter();
