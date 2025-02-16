@@ -1,8 +1,8 @@
-const zinc = @import("zinc");
+const tk = @import("tokamak");
 const User = @import("../../storage/model/user.zig").User;
 const Store = @import("../../utils//store.zig").Store;
 
-pub fn exec(ctx: *zinc.Context) !void {
+pub fn exec(res: *tk.Response) !void {
     const user = User.create_dummy_user();
-    try ctx.json(user, .{});
+    try res.json(user, .{});
 }

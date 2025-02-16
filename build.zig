@@ -21,10 +21,10 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
     });
-    exe.root_module.addImport("zinc", b.dependency("zinc", .{
+    exe.root_module.addImport("tokamak", b.dependency("tokamak", .{
         .target = target,
         .optimize = optimize,
-    }).module("zinc"));
+    }).module("tokamak"));
 
     exe.root_module.addImport("pg", b.dependency("pg", .{
         .target = target,

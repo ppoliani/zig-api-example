@@ -1,22 +1,32 @@
-const zinc = @import("zinc");
+const std = @import("std");
+const tk = @import("tokamak");
 const Store = @import("./utils/store.zig").Store;
-const user_route = @import("./endpoints/user/route.zig");
+const UserRoutes = @import("./endpoints/user/route.zig").UserRoutes;
 
 pub fn main() !void {
     var store = try Store.init();
     defer store.deinit();
-    var config = zinc.Config.Engine{ .port = 8080 };
-    config.appData(&store);
-    const engine = try zinc.init(config);
-    defer engine.deinit();
-    const router = engine.getRouter();
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
 
-    try user_route.register(try router.group("/users"));
-    try router.get("/", home);
+    const routes = &.{
+        tk.logger(.{}, &.{
+            .group("/users", UserRoutes),
+            .get("/", home),
+        }),
+    };
 
-    try engine.run();
+    const server = try tk.Server.init(
+        gpa.allocator(),
+        routes,
+        .{
+            .listen = .{ .port = 8080 },
+            .injector = tk.Injector.init(&store, null),
+        },
+    );
+
+    try server.start();
 }
 
-fn home(ctx: *zinc.Context) !void {
-    try ctx.text("Home page", .{});
+fn home() ![]const u8 {
+    return "hello world";
 }
